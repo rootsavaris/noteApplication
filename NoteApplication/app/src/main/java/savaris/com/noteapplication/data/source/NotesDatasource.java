@@ -14,7 +14,7 @@ public interface NotesDatasource {
 
     interface LoadNotesLoaded {
 
-        void LoadNotesCallback(List<Note> notes);
+        void onNotesLoaded(List<Note> notes);
 
         void onDataNotAvailable();
 
