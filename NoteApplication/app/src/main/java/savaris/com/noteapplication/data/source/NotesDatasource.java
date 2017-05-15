@@ -12,7 +12,7 @@ import savaris.com.noteapplication.data.Note;
 
 public interface NotesDatasource {
 
-    interface LoadNotesLoaded {
+    interface LoadNotesCallback {
 
         void onNotesLoaded(List<Note> notes);
 
@@ -28,7 +28,7 @@ public interface NotesDatasource {
 
     }
 
-    void getNotes(@NonNull LoadNotesLoaded callback);
+    void getNotes(@NonNull LoadNotesCallback callback);
 
     void getNote(@NonNull String noteId, @NonNull GetNoteCallback callback);
 

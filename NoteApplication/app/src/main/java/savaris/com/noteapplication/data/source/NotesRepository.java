@@ -3,6 +3,7 @@ package savaris.com.noteapplication.data.source;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,7 +48,7 @@ public class NotesRepository implements NotesDatasource {
     }
 
     @Override
-    public void getNotes(@NonNull final LoadNotesLoaded callback) {
+    public void getNotes(@NonNull final LoadNotesCallback callback) {
 
         checkNotNull(callback);
 
@@ -57,32 +58,74 @@ public class NotesRepository implements NotesDatasource {
         }
 
         if (cacheIsDirty){
+
             getNotesFromRemoteDatasource(callback);
+
+        } else {
+
+            notesDatasourceLocal.getNotes(new LoadNotesCallback() {
+
+                @Override
+                public void onNotesLoaded(List<Note> notes) {
+                    refreshCache(notes);
+                    callback.onNotesLoaded(new ArrayList<Note>(cachedNotes.values()));
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+                    getNotesFromRemoteDatasource(callback);
+                }
+            });
+
         }
-
-
-
-
-
-    }
-
-    @Override
-    public void getNote(@NonNull String noteId, @NonNull GetNoteCallback callback) {
 
     }
 
     @Override
     public void saveNote(@NonNull Note note) {
 
+        checkNotNull(note);
+
+        notesDatasourceRemote.saveNote(note);
+        notesDatasourceLocal.saveNote(note);
+
+        if (cachedNotes == null){
+            cachedNotes = new LinkedHashMap<>();
+        }
+
+        cachedNotes.put(note.getId(), note);
+
     }
 
     @Override
     public void completeNote(@NonNull Note note) {
 
+        checkNotNull(note);
+
+        notesDatasourceRemote.completeNote(note);
+        notesDatasourceLocal.completeNote(note);
+
+        Note completeNote = new Note(note.getTitle(), note.getText(), note.getId(), true);
+
+        if (cachedNotes == null){
+            cachedNotes = new LinkedHashMap<>();
+        }
+
+        cachedNotes.put(note.getId(), completeNote);
+
     }
 
     @Override
     public void completeNote(@NonNull String noteId) {
+
+        checkNotNull(noteId);
+
+        completeNote(getN);
+
+    }
+
+    @Override
+    public void getNote(@NonNull String noteId, @NonNull GetNoteCallback callback) {
 
     }
 
@@ -116,19 +159,20 @@ public class NotesRepository implements NotesDatasource {
 
     }
 
-    private void getNotesFromRemoteDatasource(@NonNull LoadNotesLoaded callback){
+    private void getNotesFromRemoteDatasource(@NonNull final LoadNotesCallback callback){
 
-        notesDatasourceRemote.getNotes(new LoadNotesLoaded() {
+        notesDatasourceRemote.getNotes(new LoadNotesCallback() {
 
             @Override
             public void onNotesLoaded(List<Note> notes) {
                 refreshCache(notes);
                 refreshLocalDataSource(notes);
+                callback.onNotesLoaded(new ArrayList<Note>(cachedNotes.values()));
             }
 
             @Override
             public void onDataNotAvailable() {
-
+                callback.onDataNotAvailable();
             }
         });
 
@@ -154,7 +198,18 @@ public class NotesRepository implements NotesDatasource {
 
         notesDatasourceLocal.deleteAllNotes();
 
+        for (Note note : notes){
+            notesDatasourceLocal.saveNote(note);
+        }
 
+    }
+
+    @Nullable
+    private Note getNoteWithId(@NonNull String id){
+
+        checkNotNull(id);
+
+        if (cachedNotes)
 
     }
 
