@@ -34,10 +34,6 @@ public interface NotesDatasource {
 
     void saveNote(@NonNull Note note);
 
-    void completeNote(@NonNull Note note);
-
-    void completeNote(@NonNull String noteId);
-
     void markNote(@NonNull Note note);
 
     void markNote(@NonNull String noteId);

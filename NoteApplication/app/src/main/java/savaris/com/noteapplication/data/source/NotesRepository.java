@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,49 +99,113 @@ public class NotesRepository implements NotesDatasource {
     }
 
     @Override
-    public void completeNote(@NonNull Note note) {
+    public void markNote(@NonNull Note note) {
 
         checkNotNull(note);
 
-        notesDatasourceRemote.completeNote(note);
-        notesDatasourceLocal.completeNote(note);
+        notesDatasourceRemote.markNote(note);
+        notesDatasourceLocal.markNote(note);
 
-        Note completeNote = new Note(note.getTitle(), note.getText(), note.getId(), true);
+        Note marketNote = new Note(note.getTitle(), note.getText(), note.getId());
 
         if (cachedNotes == null){
             cachedNotes = new LinkedHashMap<>();
         }
 
-        cachedNotes.put(note.getId(), completeNote);
-
-    }
-
-    @Override
-    public void completeNote(@NonNull String noteId) {
-
-        checkNotNull(noteId);
-
-        completeNote(getN);
-
-    }
-
-    @Override
-    public void getNote(@NonNull String noteId, @NonNull GetNoteCallback callback) {
-
-    }
-
-    @Override
-    public void markNote(@NonNull Note note) {
+        cachedNotes.put(note.getId(), marketNote);
 
     }
 
     @Override
     public void markNote(@NonNull String noteId) {
 
+        checkNotNull(noteId);
+
+        markNote(getNoteWithId(noteId));
+
     }
+
 
     @Override
     public void clearMarkedNotes() {
+
+        notesDatasourceRemote.clearMarkedNotes();
+        notesDatasourceLocal.clearMarkedNotes();
+
+        if (cachedNotes == null){
+            cachedNotes = new LinkedHashMap<>();
+        }
+
+        Iterator<Map.Entry<String, Note>> iterator = cachedNotes.entrySet().iterator();
+
+        while(iterator.hasNext()){
+
+            Map.Entry<String, Note> entry = iterator.next();
+
+            if (entry.getValue().isMarked()){
+                iterator.remove();
+            }
+
+        }
+
+    }
+
+    @Override
+    public void getNote(@NonNull final String noteId, @NonNull final GetNoteCallback callback) {
+
+        checkNotNull(noteId);
+
+        checkNotNull(callback);
+
+        Note note = getNoteWithId(noteId);
+
+        if (note != null){
+            callback.onNoteLoaded(note);
+            return;
+        }
+
+        notesDatasourceLocal.getNote(noteId, new GetNoteCallback() {
+
+            @Override
+            public void onNoteLoaded(Note note) {
+
+                if (cachedNotes == null){
+                    cachedNotes = new LinkedHashMap<String, Note>();
+                }
+
+                cachedNotes.put(noteId, note);
+
+                callback.onNoteLoaded(note);
+
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+                notesDatasourceRemote.getNote(noteId, new GetNoteCallback() {
+                    @Override
+                    public void onNoteLoaded(Note note) {
+
+                        if (cachedNotes == null){
+                            cachedNotes = new LinkedHashMap<String, Note>();
+                        }
+
+                        cachedNotes.put(noteId, note);
+
+                        callback.onNoteLoaded(note);
+
+                    }
+
+                    @Override
+                    public void onDataNotAvailable() {
+
+                        callback.onDataNotAvailable();
+
+                    }
+                });
+
+            }
+        });
 
     }
 
@@ -158,6 +223,8 @@ public class NotesRepository implements NotesDatasource {
     public void deleteNote(@NonNull String noteId) {
 
     }
+
+
 
     private void getNotesFromRemoteDatasource(@NonNull final LoadNotesCallback callback){
 
@@ -209,7 +276,11 @@ public class NotesRepository implements NotesDatasource {
 
         checkNotNull(id);
 
-        if (cachedNotes)
+        if (cachedNotes == null || cachedNotes.isEmpty()){
+            return null;
+        }
+
+        return cachedNotes.get(id);
 
     }
 
