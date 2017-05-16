@@ -211,19 +211,32 @@ public class NotesRepository implements NotesDatasource {
 
     @Override
     public void refreshNotes() {
-
+        cacheIsDirty = true;
     }
 
     @Override
     public void deleteAllNotes() {
+
+        notesDatasourceRemote.deleteAllNotes();
+        notesDatasourceLocal.deleteAllNotes();
+
+        if (cachedNotes == null){
+            cachedNotes = new LinkedHashMap<>();
+        }
+
+        cachedNotes.clear();
 
     }
 
     @Override
     public void deleteNote(@NonNull String noteId) {
 
-    }
+        notesDatasourceRemote.deleteNote(checkNotNull(noteId));
+        notesDatasourceLocal.deleteNote(checkNotNull(noteId));
 
+        cachedNotes.remove(noteId);
+
+    }
 
 
     private void getNotesFromRemoteDatasource(@NonNull final LoadNotesCallback callback){
