@@ -17,6 +17,10 @@ public class NotesPresenter implements NotesContract.Presenter{
 
     private final NotesContract.View notesView;
 
+    private NotesFilterType notesFilterType = NotesFilterType.ALL_NOTES;
+
+    private boolean firstLoad = true;
+
     public NotesPresenter(@NonNull NotesRepository notesRepository, @NonNull NotesContract.View notesView){
         this.notesRepository = checkNotNull(notesRepository);
         this.notesView = notesView;

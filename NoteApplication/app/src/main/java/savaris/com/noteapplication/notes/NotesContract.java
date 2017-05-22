@@ -50,11 +50,11 @@ public interface NotesContract {
 
         void showNoNotes();
 
-        void showActiveFilterLabel();
+        void showMarkedFilterLabel();
 
         void showAllFilterLabel();
 
-        void showNoMarketNotes();
+        void showNoMarkedNotes();
 
         void showSuccessfullySavedMessage();
 

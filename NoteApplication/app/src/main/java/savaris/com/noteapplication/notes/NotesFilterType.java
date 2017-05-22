@@ -8,6 +8,6 @@ public enum NotesFilterType {
 
     ALL_NOTES,
 
-    MARKET_NOTES
+    MARKED_NOTES
 
 }
