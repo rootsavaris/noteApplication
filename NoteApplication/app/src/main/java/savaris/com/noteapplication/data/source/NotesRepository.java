@@ -106,7 +106,7 @@ public class NotesRepository implements NotesDatasource {
         notesDatasourceRemote.markNote(note);
         notesDatasourceLocal.markNote(note);
 
-        Note marketNote = new Note(note.getTitle(), note.getText(), note.getId());
+        Note marketNote = new Note(note.getTitle(), note.getText(), note.getId(), !note.isMarked());
 
         if (cachedNotes == null){
             cachedNotes = new LinkedHashMap<>();

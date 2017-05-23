@@ -15,11 +15,4 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item
-        android:id="@+id/list_navigation_menu_item"
-        android:title="@string/list_title" />
-    <item
-        android:id="@+id/statistics_navigation_menu_item"
-        android:title="@string/statistics_title" />
 </menu>

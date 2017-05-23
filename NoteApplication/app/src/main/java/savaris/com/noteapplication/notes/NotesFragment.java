@@ -388,11 +388,7 @@ public class NotesFragment extends Fragment implements NotesContract.View{
 
                 @Override
                 public void onClick(View view) {
-
-                    if (!note.isMarked()){
-                        mNotesItemListener.onMarkedNoteClick(note);
-                    }
-
+                    mNotesItemListener.onMarkedNoteClick(note);
                 }
             });
 
@@ -400,9 +396,7 @@ public class NotesFragment extends Fragment implements NotesContract.View{
 
                 @Override
                 public void onClick(View view) {
-
                     mNotesItemListener.onNoteClick(note);
-
                 }
             });
 

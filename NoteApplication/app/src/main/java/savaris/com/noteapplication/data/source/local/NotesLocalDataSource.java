@@ -186,7 +186,7 @@ public class NotesLocalDataSource implements NotesDatasource {
 
         SQLiteDatabase db = notesDbHelper.getWritableDatabase();
 
-        String selection = NotesPersistenceContract.NotesEntry.COLUMN_NAME_MARKED + "LIKE ?";
+        String selection = NotesPersistenceContract.NotesEntry.COLUMN_NAME_MARKED + " LIKE ?";
         String[] selectionArgs = {"1"};
 
         db.delete(NotesPersistenceContract.NotesEntry.TABLE_NAME, selection, selectionArgs);

@@ -107,14 +107,6 @@ public class NotesActivity extends AppCompatActivity{
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()){
-
-                    case R.id.list_navigation_menu_item:
-                        break;
-                    case R.id.statistics_navigation_menu_item:
-                }
-
                 return true;
             }
         });
