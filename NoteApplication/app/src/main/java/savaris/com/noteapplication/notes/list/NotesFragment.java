@@ -1,4 +1,4 @@
-package savaris.com.noteapplication.notes;
+package savaris.com.noteapplication.notes.list;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

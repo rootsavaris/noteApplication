@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<savaris.com.noteapplication.notes.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<savaris.com.noteapplication.notes.list.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -84,5 +84,5 @@
 
         </LinearLayout>
     </RelativeLayout>
-</savaris.com.noteapplication.notes.ScrollChildSwipeRefreshLayout>
+</savaris.com.noteapplication.notes.list.ScrollChildSwipeRefreshLayout>
 

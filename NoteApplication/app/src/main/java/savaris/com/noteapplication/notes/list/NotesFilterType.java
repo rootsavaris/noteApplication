@@ -1,4 +1,4 @@
-package savaris.com.noteapplication.notes;
+package savaris.com.noteapplication.notes.list;
 
 /**
  * Created by rafael.savaris on 19/05/2017.

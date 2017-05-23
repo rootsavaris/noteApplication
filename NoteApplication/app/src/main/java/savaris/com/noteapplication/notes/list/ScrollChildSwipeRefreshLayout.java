@@ -1,4 +1,4 @@
-package savaris.com.noteapplication.notes;
+package savaris.com.noteapplication.notes.list;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
