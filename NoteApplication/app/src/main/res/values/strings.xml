@@ -20,5 +20,7 @@
     <string name="label_all">All Notes</string>
     <string name="label_marked">Marked Notes</string>
     <string name="successfully_saved_note_message">Note saved</string>
-
+    <string name="loading">LOADING</string>
+    <string name="add_note">New Note</string>
+    <string name="edit_note">Edit Note</string>
 </resources>

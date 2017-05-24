@@ -30,6 +30,7 @@ import java.util.List;
 
 import savaris.com.noteapplication.R;
 import savaris.com.noteapplication.data.Note;
+import savaris.com.noteapplication.notes.detail.NoteDetailActivity;
 
 /**
  * Created by rafael.savaris on 19/05/2017.
@@ -209,8 +210,8 @@ public class NotesFragment extends Fragment implements NotesContract.View{
     @Override
     public void showNoteDetailsUi(String noteId) {
 
-        Intent intent = new Intent(getContext(), null);
-        intent.putExtra(null, noteId);
+        Intent intent = new Intent(getContext(), NoteDetailActivity.class);
+        intent.putExtra(NoteDetailActivity.EXTRA_NOTE_ID, noteId);
         startActivity(intent);
 
     }
