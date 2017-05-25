@@ -30,6 +30,7 @@ import java.util.List;
 
 import savaris.com.noteapplication.R;
 import savaris.com.noteapplication.data.Note;
+import savaris.com.noteapplication.notes.add.AddEditNoteActivity;
 import savaris.com.noteapplication.notes.detail.NoteDetailActivity;
 
 /**
@@ -202,8 +203,8 @@ public class NotesFragment extends Fragment implements NotesContract.View{
     @Override
     public void showAddNote() {
 
-        Intent intent = new Intent(getContext(), null);
-        startActivity(intent, null);
+        Intent intent = new Intent(getContext(), AddEditNoteActivity.class);
+        startActivityForResult(intent, AddEditNoteActivity.REQUEST_ADD_NOTE);
 
     }
 

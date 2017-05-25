@@ -23,4 +23,7 @@
     <string name="loading">LOADING</string>
     <string name="add_note">New Note</string>
     <string name="edit_note">Edit Note</string>
+    <string name="title_hint">Title</string>
+    <string name="text_hint">Enter your Note here.</string>
+    <string name="empty_note_message">Notes cannot be empty</string>
 </resources>

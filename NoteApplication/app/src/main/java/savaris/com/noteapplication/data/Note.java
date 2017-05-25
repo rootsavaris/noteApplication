@@ -3,6 +3,8 @@ package savaris.com.noteapplication.data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.common.base.Strings;
+
 import java.util.UUID;
 
 /**
@@ -62,5 +64,11 @@ public class Note {
     public boolean isMarked() {
         return marked;
     }
+
+    public boolean isEmpty() {
+        return Strings.isNullOrEmpty(title) &&
+                Strings.isNullOrEmpty(text);
+    }
+
 
 }

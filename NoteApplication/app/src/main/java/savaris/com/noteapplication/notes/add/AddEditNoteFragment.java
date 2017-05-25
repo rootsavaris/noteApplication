@@ -1,11 +1,15 @@
 package savaris.com.noteapplication.notes.add;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import savaris.com.noteapplication.R;
@@ -49,6 +53,18 @@ public class AddEditNoteFragment extends Fragment implements AddEditNoteContract
 
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View root = inflater.inflate(R.layout.add_note_fragment, container, false);
+        textTitle = (TextView) root.findViewById(R.id.add_note_title);
+        textText = (TextView) root.findViewById(R.id.add_note_text);
+        setHasOptionsMenu(true);
+        return root;
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -64,26 +80,27 @@ public class AddEditNoteFragment extends Fragment implements AddEditNoteContract
 
     @Override
     public void showEmptyNoteError() {
-
+        Snackbar.make(textTitle, getString(R.string.empty_note_message), Snackbar.LENGTH_SHORT);
     }
 
     @Override
     public void showNoteList() {
-
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override
     public void setTitle(String title) {
-
+        textTitle.setText(title);
     }
 
     @Override
     public void setText(String text) {
-
+        textText.setText(text);
     }
 
     @Override
     public boolean isActive() {
-        return false;
+        return isAdded();
     }
 }

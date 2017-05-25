@@ -18,6 +18,8 @@ public class AddEditNoteActivity extends AppCompatActivity {
 
     public static final String SHOULD_LOAD_DATA = "SHOULD_LOAD_DATA";
 
+    public static final int REQUEST_ADD_NOTE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

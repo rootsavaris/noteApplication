@@ -1,5 +1,6 @@
 package savaris.com.noteapplication.notes.list;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 import savaris.com.noteapplication.data.Note;
 import savaris.com.noteapplication.data.source.NotesDatasource;
 import savaris.com.noteapplication.data.source.NotesRepository;
+import savaris.com.noteapplication.notes.add.AddEditNoteActivity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +41,9 @@ public class NotesPresenter implements NotesContract.Presenter{
     @Override
     public void result(int requestCode, int resultCode) {
 
-
+        if (AddEditNoteActivity.REQUEST_ADD_NOTE == requestCode && Activity.RESULT_OK == resultCode){
+            notesView.showSuccessfullySavedMessage();
+        }
 
     }
 
