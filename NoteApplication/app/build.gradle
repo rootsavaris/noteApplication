@@ -41,8 +41,9 @@ dependencies {
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
-    /*
     testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+
+    /*
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
 
     // Android Testing Support Library's runner and rules

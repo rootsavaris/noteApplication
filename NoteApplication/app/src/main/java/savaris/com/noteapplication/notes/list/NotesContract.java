@@ -58,7 +58,7 @@ public interface NotesContract {
 
         void showSuccessfullySavedMessage();
 
-        boolean isMarked();
+        boolean isActive();
 
         void showFilteringPopUpMenu();
 

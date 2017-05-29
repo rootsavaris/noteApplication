@@ -257,7 +257,7 @@ public class NotesFragment extends Fragment implements NotesContract.View{
     }
 
     @Override
-    public boolean isMarked() {
+    public boolean isActive() {
         return isAdded();
     }
 
