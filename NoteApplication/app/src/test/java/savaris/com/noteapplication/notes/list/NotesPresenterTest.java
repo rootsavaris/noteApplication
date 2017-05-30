@@ -4,14 +4,20 @@ import com.google.common.collect.Lists;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
 import savaris.com.noteapplication.data.Note;
+import savaris.com.noteapplication.data.source.NotesDatasource;
 import savaris.com.noteapplication.data.source.NotesRepository;
 
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +36,9 @@ public class NotesPresenterTest {
 
     @Mock
     private NotesContract.View view;
+
+    @Captor
+    private ArgumentCaptor<NotesDatasource.LoadNotesCallback> loadNotesCallbackArgumentCaptor;
 
     @Before
     public void setup(){
@@ -57,10 +66,24 @@ public class NotesPresenterTest {
     public void loadAllNotes(){
 
         notesPresenter.setFiltering(NotesFilterType.ALL_NOTES);
+
         notesPresenter.loadNotes(true);
 
+        verify(notesRepository).getNotes(loadNotesCallbackArgumentCaptor.capture());
 
+        loadNotesCallbackArgumentCaptor.getValue().onNotesLoaded(notes);
 
+        InOrder inOrder = inOrder(view);
+
+        inOrder.verify(view).setLoadingIndicator(true);
+
+        inOrder.verify(view).setLoadingIndicator(false);
+
+        ArgumentCaptor<List> showNotesArgumentCaptor = ArgumentCaptor.forClass(List.class);
+
+        verify(view).showNotes(showNotesArgumentCaptor.capture());
+
+        assertTrue(showNotesArgumentCaptor.getValue().size() == 3);
 
     }
 
