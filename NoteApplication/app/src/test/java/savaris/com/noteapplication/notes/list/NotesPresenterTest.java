@@ -17,6 +17,7 @@ import savaris.com.noteapplication.data.source.NotesDatasource;
 import savaris.com.noteapplication.data.source.NotesRepository;
 
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,7 +64,7 @@ public class NotesPresenterTest {
     }
 
     @Test
-    public void loadAllNotes(){
+    public void loadAllNotesFromRepositoryIntoView(){
 
         notesPresenter.setFiltering(NotesFilterType.ALL_NOTES);
 
@@ -84,6 +85,64 @@ public class NotesPresenterTest {
         verify(view).showNotes(showNotesArgumentCaptor.capture());
 
         assertTrue(showNotesArgumentCaptor.getValue().size() == 3);
+
+    }
+
+    @Test
+    public void loadMarkedNotesFromRepositoryIntoView(){
+
+        notesPresenter.setFiltering(NotesFilterType.MARKED_NOTES);
+
+        notesPresenter.loadNotes(true);
+
+        verify(notesRepository).getNotes(loadNotesCallbackArgumentCaptor.capture());
+
+        loadNotesCallbackArgumentCaptor.getValue().onNotesLoaded(notes);
+
+        InOrder inOrder = inOrder(view);
+
+        inOrder.verify(view).setLoadingIndicator(true);
+
+        inOrder.verify(view).setLoadingIndicator(false);
+
+        ArgumentCaptor<List> showNotesArgumentCaptor = ArgumentCaptor.forClass(List.class);
+
+        verify(view).showNotes(showNotesArgumentCaptor.capture());
+
+        assertTrue(showNotesArgumentCaptor.getValue().size() == 2);
+
+
+    }
+
+    @Test
+    public void clickOnFab_ShowAddNoteUi(){
+
+        notesPresenter.addNewNote();
+
+        verify(view).showAddNote();
+
+    }
+
+    @Test
+    public void clickOnNote_ShowDetailUi(){
+
+        Note note = new Note("Detail", "Detail");
+
+        notesPresenter.openNoteDetails(note);
+
+        verify(view).showNoteDetailsUi(any(String.class));
+
+    }
+
+    @Test
+    public void markNote_ShowsNoteMarked(){
+
+        Note note = new Note("Detail", "Detail");
+
+        notesPresenter.marketNote(note);
+
+        verify(notesRepository).markNote(note);
+        verify(view).showNoteMarked();
 
     }
 
