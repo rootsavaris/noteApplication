@@ -146,4 +146,19 @@ public class NotesPresenterTest {
 
     }
 
+    @Test
+    public void unavailableNotes_ShowsError(){
+
+        notesPresenter.setFiltering(NotesFilterType.ALL_NOTES);
+
+        notesPresenter.loadNotes(true);
+
+        verify(notesRepository).getNotes(loadNotesCallbackArgumentCaptor.capture());
+
+        loadNotesCallbackArgumentCaptor.getValue().onDataNotAvailable();
+
+        verify(view).showLoadingNotesError();
+
+    }
+
 }
