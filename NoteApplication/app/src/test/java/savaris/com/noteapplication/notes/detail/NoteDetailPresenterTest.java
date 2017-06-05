@@ -14,6 +14,7 @@ import savaris.com.noteapplication.data.source.NotesRepository;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,6 +29,8 @@ public class NoteDetailPresenterTest {
     public static final String TEXT = "text";
 
     public static final Note NOTE = new Note(TITLE, TEXT);
+
+    public static final String INVALID_NOTE_ID = "";
 
     private NoteDetailPresenter noteDetailPresenter;
 
@@ -82,5 +85,71 @@ public class NoteDetailPresenterTest {
         verify(view).showMarkedStatus(false);
 
     }
+
+    @Test
+    public void getUnknownNoteFromRepositoryAndLoadIntoView(){
+
+        noteDetailPresenter = new NoteDetailPresenter(INVALID_NOTE_ID, notesRepository, view);
+
+        noteDetailPresenter.start();
+
+        verify(view).showMissingNote();
+
+    }
+
+    @Test
+    public void deleteNote(){
+
+        Note note = new Note(TITLE, TEXT);
+
+        noteDetailPresenter = new NoteDetailPresenter(note.getId(), notesRepository, view);
+
+        noteDetailPresenter.deleteNote();
+
+        verify(notesRepository).deleteNote(note.getId());
+
+        verify(view).showNoteDeleted();
+
+    }
+
+    @Test
+    public void markNote(){
+
+        Note note = new Note(TITLE, TEXT);
+
+        noteDetailPresenter = new NoteDetailPresenter(note.getId(), notesRepository, view);
+
+        noteDetailPresenter.markedNote();
+
+        verify(notesRepository).markNote(note.getId());
+
+        verify(view).showNoteMarked();
+
+    }
+
+    @Test
+    public void markNoteIsShowWhenEditing(){
+
+        noteDetailPresenter = new NoteDetailPresenter(NOTE.getId(), notesRepository, view);
+
+        noteDetailPresenter.editNote();
+
+        verify(view).showEditNote(NOTE.getId());
+
+    }
+
+    @Test
+    public void invalidNoteIsNotShowWhenEditing(){
+
+        noteDetailPresenter = new NoteDetailPresenter(INVALID_NOTE_ID, notesRepository, view);
+
+        noteDetailPresenter.editNote();
+
+        verify(view, never()).showEditNote(INVALID_NOTE_ID);
+
+        verify(view).showMissingNote();
+
+    }
+
 
 }
