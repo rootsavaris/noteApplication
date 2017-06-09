@@ -24,6 +24,7 @@ import static org.mockito.Matchers.booleanThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -46,6 +47,9 @@ public class NotesRepositoryTest {
 
     @Captor
     private ArgumentCaptor<NotesDatasource.LoadNotesCallback> loadNotesCallbackArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<NotesDatasource.GetNoteCallback> getNoteCallbackArgumentCaptor;
 
     private NotesRepository notesRepository;
 
@@ -232,6 +236,60 @@ public class NotesRepositoryTest {
 
     }
 
+    @Test
+    public void getNotesWithLocalDataSourceUnavailable_notesAreRetrieveFromRemote(){
+
+        notesRepository.getNotes(loadNotesCallback);
+
+        setNotesNotAvailable(notesLocalDataSource);
+
+        setNotesAvailable(notesRemoteDataSource, NOTES);
+
+        verify(loadNotesCallback).onNotesLoaded(NOTES);
+
+    }
+
+    @Test
+    public void getNotesWithBothDataSourcesUnavailable_firesOnDataUnavailable(){
+
+        notesRepository.getNotes(loadNotesCallback);
+
+        setNotesNotAvailable(notesLocalDataSource);
+
+        setNotesNotAvailable(notesRemoteDataSource);
+
+        verify(loadNotesCallback).onDataNotAvailable();
+
+    }
+
+    @Test
+    public void getNoteWithBothDataSourceUnavailable_firesOnDataUnavailable(){
+
+        String noteId = "123";
+
+        notesRepository.getNote(noteId, getNoteCallback);
+
+        setNoteNotAvailable(notesLocalDataSource, noteId);
+
+        setNoteNotAvailable(notesRemoteDataSource, noteId);
+
+        verify(getNoteCallback).onDataNotAvailable();
+
+    }
+
+    @Test
+    public void getNotes_refreshesLocalDataSource(){
+
+        notesRepository.refreshNotes();
+
+        notesRepository.getNotes(loadNotesCallback);
+
+        setNotesAvailable(notesRemoteDataSource, NOTES);
+
+        verify(notesLocalDataSource, times(NOTES.size())).saveNote(any(Note.class));
+
+    }
+
     private void setNotesAvailable(NotesDatasource datasource, List<Note> notes){
 
         verify(datasource).getNotes(loadNotesCallbackArgumentCaptor.capture());
@@ -240,6 +298,21 @@ public class NotesRepositoryTest {
 
     }
 
+    private void setNotesNotAvailable(NotesDatasource notesDatasource){
+
+        verify(notesDatasource).getNotes(loadNotesCallbackArgumentCaptor.capture());
+
+        loadNotesCallbackArgumentCaptor.getValue().onDataNotAvailable();
+
+    }
+
+    private void setNoteNotAvailable(NotesDatasource notesDatasource, String noteId){
+
+        verify(notesDatasource).getNote(eq(noteId), getNoteCallbackArgumentCaptor.capture());
+
+        getNoteCallbackArgumentCaptor.getValue().onDataNotAvailable();
+
+    }
 
     private void twoNotesLoadCallsToRepository(NotesDatasource.LoadNotesCallback  callback){
 
