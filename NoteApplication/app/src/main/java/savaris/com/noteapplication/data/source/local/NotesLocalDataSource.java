@@ -29,7 +29,7 @@ public class NotesLocalDataSource implements NotesDatasource {
         notesDbHelper = new NotesDbHelper(context);
     }
 
-    public static NotesDatasource getInstance(@NonNull Context context){
+    public static NotesLocalDataSource getInstance(@NonNull Context context){
 
         if (INSTANCE == null){
             INSTANCE = new NotesLocalDataSource(context);
